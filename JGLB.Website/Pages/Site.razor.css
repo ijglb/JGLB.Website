@@ -1,0 +1,10 @@
+﻿::deep .mdui-card-header {
+    height: 36px;
+}
+
+::deep .mdui-card-header-avatar {
+    height: auto;
+}
+.fix-a {
+    display: inline;
+}

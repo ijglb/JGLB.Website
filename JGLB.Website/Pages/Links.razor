@@ -1,0 +1,42 @@
+﻿@page "/links"
+@using JGLB.Common;
+@inject IConfiguration Configuration
+
+<PageTitle>@AppEx.Title("友情链接")</PageTitle>
+
+<div>
+    <GridRow XS="1" SM="2" MD="4" Class="links">
+        @foreach (var link in _MyLink)
+        {
+            <GridCol Class="mdui-m-b-1">
+                <a href="@link.Url" title="@link.Desc" target="_blank">
+                    <Card Class="mdui-hoverable">
+                        <CardHeader>
+                            <CardHeaderAvatar Src="@link.Avatar"></CardHeaderAvatar>
+                            <CardHeaderTitle>@link.Name</CardHeaderTitle>
+                            <CardHeaderSubtitle>@link.Desc</CardHeaderSubtitle>
+                        </CardHeader>
+                    </Card>
+                </a>
+            </GridCol>
+        }
+    </GridRow>
+</div>
+
+@code {
+    private List<MyLink> _MyLink;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _MyLink = Configuration.GetSection("WebSite:Links").Get<List<MyLink>>().Shuffle().ToList();
+    }
+
+    protected class MyLink
+    {
+        public string Name { get; set; }
+        public string Avatar { get; set; }
+        public string Desc { get; set; }
+        public string Url { get; set; }
+    }
+}

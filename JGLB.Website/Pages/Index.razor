@@ -1,0 +1,32 @@
+﻿@page "/"
+@inject IConfiguration Configuration
+
+<PageTitle>极光萝卜</PageTitle>
+
+<div class="mdui-typo">
+    <img src="/image/avatar.jpg" class="mdui-center" style="max-width:250px;border-radius:50%;border:2px solid #ccc;">
+    <h1 class="mdui-text-center">极光萝卜</h1>
+    <p class="mdui-typo-subheading mdui-text-center mdui-p-t-2">
+        @foreach (var link in _MyLink)
+        {
+            <Button Tag="a" href="@link.Url" target="_blank" class="@Ripple.CSS()" mdui-tooltip="@($"{{content: '{link.Name}'}}")" Raised Icon><svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32"><path d="@link.SvgPath" fill="#ffffff"></path></svg></Button>
+        }
+    </p>
+</div>
+
+@code {
+    private List<MyLink> _MyLink;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _MyLink = Configuration.GetSection("WebSite:Index:MyLinks").Get<List<MyLink>>();
+    }
+
+    protected class MyLink
+    {
+        public string Name { get; set; }
+        public string Url { get; set; }
+        public string SvgPath { get; set; }
+    }
+}

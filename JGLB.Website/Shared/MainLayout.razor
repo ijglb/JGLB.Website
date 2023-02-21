@@ -1,0 +1,87 @@
+﻿@using JGLB.Website.Data;
+@inherits LayoutComponentBase
+@*@implements IDisposable
+@inject IJSRuntime Js*@
+
+<PageTitle>极光萝卜</PageTitle>
+
+<Body PrimaryColor="Color.Teal" AccentColor="Color.DeepOrange" Style="height: calc(100vh - 72px);">
+    <NavMenu />
+    <Container BGColor="Color.Theme" BGDegree="Degree.The100" Style="height: 100%" Fluid>
+        <Card BGColor="Color.Theme" BGDegree="Degree.The200" Style="height: calc(100% - 27px - 8px)">
+            <CardContent>
+                @Body
+            </CardContent>
+        </Card>
+        <div id="footer" class="mdui-m-t-1 mdui-text-center mdui-typo">
+            &copy; 2016 - @_Year 极光萝卜 | <a href="http://beian.miit.gov.cn" target="_blank">闽ICP备16005039号-1</a>
+        </div>
+    </Container>
+</Body>
+
+@code
+{
+    private string _Year = DateTime.Now.Year.ToString();
+    //private string _CardContentHeight = "";
+    //private string _CardStyle => $"{_CardContentHeight}";
+    //private Card? _Card;
+    //private readonly Queue<Func<Task>> _afterRenderCallQuene = new Queue<Func<Task>>();
+    //private decimal _TempHeight;
+    //private decimal _TabHeight;
+    //private decimal _FooterHeight;
+
+    //protected override void OnInitialized()
+    //{
+    //    base.OnInitialized();
+    //    AppEx.OnWindowResize += OnWindowResize;
+    //}
+
+    //protected override async Task OnAfterRenderAsync(bool firstRender)
+    //{
+    //    await base.OnAfterRenderAsync(firstRender);
+    //    if (firstRender)
+    //    {
+    //        var jq = await Js.InvokeAsync<IJSObjectReference>("mdui.$", "#app-tab");
+    //        _TabHeight = await jq.InvokeAsync<decimal>("height");
+    //        await jq.DisposeAsync();
+    //        jq = await Js.InvokeAsync<IJSObjectReference>("mdui.$", "#footer");
+    //        _FooterHeight = await jq.InvokeAsync<decimal>("height");
+    //        await jq.DisposeAsync();
+    //        //_TempHeight = jq.InvokeAsync<decimal>("window.");
+    //    }
+    //    if (_afterRenderCallQuene.Count > 0)
+    //    {
+    //        var actions = _afterRenderCallQuene.ToArray();
+    //        _afterRenderCallQuene.Clear();
+    //        foreach (var action in actions)
+    //        {
+    //            await action();
+    //        }
+    //    }
+    //}
+
+    //protected void OnWindowResize(object? sender, Window e)
+    //{
+    //    if (_TempHeight != e.InnerHeight)
+    //    {
+    //        _TempHeight = e.InnerHeight;
+    //        _afterRenderCallQuene.Enqueue(async () =>
+    //        {
+    //            var tempHeight = _TempHeight - _TabHeight - _FooterHeight - 8;
+    //            var tempStyle = $"min-height:{tempHeight}px;";
+    //            if (tempStyle != _CardContentHeight)
+    //            {
+    //                _CardContentHeight = tempStyle;
+    //                StateHasChanged();
+    //            }
+    //            await Task.CompletedTask;
+    //        });
+    //        InvokeAsync(StateHasChanged);
+    //    }
+    //}
+
+    //public void Dispose()
+    //{
+    //    AppEx.OnWindowResize -= OnWindowResize;
+    //}
+}

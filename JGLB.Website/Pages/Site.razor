@@ -1,0 +1,38 @@
+﻿@page "/site"
+@inject IConfiguration Configuration
+
+<PageTitle>@AppEx.Title("我的站点")</PageTitle>
+
+    <GridRow XS="1" SM="2" MD="4" Class="mdui-typo">
+        @foreach (var mySite in _MySite)
+        {
+            <GridCol Class="mdui-m-b-1">
+                <a href="@mySite.Url" title="@mySite.Desc" target="_blank" class="fix-a">
+                    <Card Class="mdui-hoverable">
+                        <CardHeader>
+                            <Icon Class="mdui-card-header-avatar mdui-typo-title" TextColor="Color.Green">cloud</Icon>
+                            <CardHeaderTitle Class="mdui-text-truncate">@mySite.Name</CardHeaderTitle>
+                        </CardHeader>
+                        <CardContent Class="mdui-text-truncate">@mySite.Desc</CardContent>
+                    </Card>
+                </a>
+            </GridCol>
+        }
+    </GridRow>
+
+@code {
+    private List<MySite> _MySite;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _MySite = Configuration.GetSection("WebSite:Site:MySite").Get<List<MySite>>();
+    }
+
+    protected class MySite
+    {
+        public string Name { get; set; }
+        public string Url { get; set; }
+        public string Desc { get; set; }
+    }
+}

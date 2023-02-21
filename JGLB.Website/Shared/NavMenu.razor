@@ -1,0 +1,24 @@
+﻿@using JGLB.Website.Data
+@inject IConfiguration Configuration
+
+<Appbar Fixed ScrollHide>
+    <Tab Id="app-tab" BGColor="Color.Theme" Class="@Ripple.Color(Color.White)" Centered>
+        @foreach (var nav in _Navs)
+        {
+            <TabItem Label="@nav?.Name" Icon="@nav?.Icon" RouterLink="@nav?.RouteUrl"></TabItem>
+        }
+    </Tab>
+</Appbar>
+
+@code {
+    /// <summary>
+    /// 导航，暂时写死
+    /// </summary>
+    private List<Nav> _Navs;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _Navs = Configuration.GetSection("WebSite:Nav").Get<List<Nav>>();
+    }
+}

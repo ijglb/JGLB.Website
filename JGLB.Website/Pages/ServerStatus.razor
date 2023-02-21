@@ -1,0 +1,148 @@
+﻿@page "/server-status"
+@using JGLB.Common;
+@using JGLB.Website.Data;
+@using JGLB.Website.Service;
+@implements IDisposable
+@inject ServerStatusService _ServerStatusService;
+
+<PageTitle>@AppEx.Title("服务器状态监控")</PageTitle>
+
+<div>
+    <GridRow XS="1" SM="2" MD="4">
+        @foreach (var server in _Servers)
+        {
+            <GridCol Class="mdui-m-b-1" @key="server.host">
+                <Card Class="mdui-hoverable">
+                    <CardHeader>
+                        <Icon TextColor="@(server.Online ? Color.Green : Color.Red)" ExIcon="jglb-iconfont" Class="mdui-card-header-avatar mdui-typo-title">@((MarkupString)(server.IsWin ? "&#xe86f;" : "&#xe697;"))</Icon>
+                        <CardHeaderTitle>@server.name</CardHeaderTitle>
+                        <CardHeaderSubtitle>@server.location</CardHeaderSubtitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div class="row">
+                            <div class="title">在线时间：</div><div class="content">@(server.Online ? server.uptime : "-")</div>
+                        </div>
+                        <div class="row">
+                            <div class="title">负载：</div><div class="content">@(server.Online ? server.load_1 : "-")</div>
+                        </div>
+                        <div class="row">
+                            <div class="title">CPU：</div>
+                            <Progress Class="content" Process="@(server.Online ? server.cpu : 0)">
+                                <div class="progress">@(server.Online ? $"{server.cpu} %" : "-")</div>
+                            </Progress>
+                        </div>
+                        <div class="row">
+                            <div class="title">内存：</div>
+                            <Progress Class="content" Process="@(server.Online ? Math.Round(((decimal)server.memory_used/server.memory_total)*100) : 0)">
+                                <div class="progress">@(server.Online ? $"{BytesToSize(server.memory_used * 1024)} / {BytesToSize(server.memory_total * 1024)}" : "-")</div>
+                            </Progress>
+                        </div>
+                        <div class="row">
+                            <div class="title">Swap：</div>
+                            <Progress Class="content" Process="@(server.Online ? Math.Round(((decimal)server.swap_used/server.swap_total)*100) : 0)">
+                                <div class="progress">@(server.Online ? $"{BytesToSize(server.swap_used * 1024)} / {BytesToSize(server.swap_total * 1024)}" : "-")</div>
+                            </Progress>
+                        </div>
+                        <div class="row">
+                            <div class="title">硬盘：</div>
+                            <Progress Class="content" Process="@(server.Online ? Math.Round(((decimal)server.hdd_used/server.hdd_total)*100) : 0)">
+                                <div class="progress">@(server.Online ? $"{BytesToSize(server.hdd_used * 1024 * 1024)} / {BytesToSize(server.hdd_total * 1024 * 1024)}" : "-")</div>
+                            </Progress>
+                        </div>
+                        <div class="row">
+                            <div class="title">@(server.IsWin ? "流量：" : "月流量：")</div><div class="content">@(server.Online ? $"入：{BytesToSize(server.network_in)} | 出：{BytesToSize(server.network_out)}" : "-")</div>
+                        </div>
+                        <div class="row">
+                            <div class="title">网络：</div><div class="content">@(server.Online ? $"入：{BytesToSize(server.network_rx)} | 出：{BytesToSize(server.network_tx)}" : "-")</div>
+                        </div>
+                    </CardContent>
+                </Card>
+            </GridCol>
+        }
+    </GridRow>
+    <div class="mdui-typo">
+        <hr />
+        <p>@Updated</p>
+    </div>
+</div>
+
+@code {
+    private ServerStats[] _Servers = Array.Empty<ServerStats>();
+
+    private string _Updated ="";
+    private string Updated => string.IsNullOrEmpty(_Updated) ? "加载中..." : $"最后更新时间：{DateTimeHelper.FromUnixTimeSeconds(long.Parse(_Updated)).MyFormat()}";
+    private System.Timers.Timer _Timer;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _Timer = new System.Timers.Timer(2000);
+        _Timer.Elapsed += OnTimerElapsed;
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+        if (firstRender && !_Timer.Enabled)
+        {
+            _Timer.Start();
+        }
+    }
+
+    private void OnTimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        var response = _ServerStatusService.GetServerStats().Result;
+        if (response != null)
+        {
+            _Updated = response.updated;
+            _Servers = response.servers;
+            InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private string BytesToSize(long bytes, int precision = 2, bool is1000 = false)
+    {
+        long kilobyte = 1024;
+        long megabyte = kilobyte * 1024;
+        long gigabyte = megabyte * 1024;
+        long terabyte = gigabyte * 1024;
+        if (is1000)
+        {
+            kilobyte = 1000;
+            megabyte = kilobyte * 1000;
+            gigabyte = megabyte * 1000;
+            terabyte = gigabyte * 1000;
+        }
+        string ret = "";
+        if (bytes >= 0 && bytes < kilobyte)
+        {
+            return $"{bytes} B";
+        }
+        else if (bytes >= kilobyte && bytes < megabyte)
+        {
+            ret = $"{Math.Round((decimal)bytes / kilobyte, precision).ToString("F")} K";
+        }
+        else if ((bytes >= megabyte) && (bytes < gigabyte))
+        {
+            ret = $"{Math.Round((decimal)bytes / megabyte, precision).ToString("F")} M";
+        }
+        else if ((bytes >= gigabyte) && (bytes < terabyte))
+        {
+            ret = $"{Math.Round((decimal)bytes / gigabyte, precision).ToString("F")} G";
+        }
+        else if (bytes >= terabyte)
+        {
+            ret = $"{Math.Round((decimal)bytes / terabyte, precision).ToString("F")} T";
+        }
+        else
+        {
+            return $"{bytes} B";
+        }
+        return is1000 ? ret + "B" : ret + "iB";
+    }
+
+    public void Dispose()
+    {
+        _Timer.Stop();
+    }
+}
