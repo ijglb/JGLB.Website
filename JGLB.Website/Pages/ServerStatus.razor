@@ -33,19 +33,19 @@
                         </div>
                         <div class="row">
                             <div class="title">内存：</div>
-                            <Progress Class="content" Process="@(server.Online ? Math.Round(((decimal)server.memory_used/server.memory_total)*100) : 0)">
+                            <Progress Class="content" Process="@(server.Online ? server.MemoryUsage * 100 : 0)">
                                 <div class="progress">@(server.Online ? $"{BytesToSize(server.memory_used * 1024)} / {BytesToSize(server.memory_total * 1024)}" : "-")</div>
                             </Progress>
                         </div>
                         <div class="row">
                             <div class="title">Swap：</div>
-                            <Progress Class="content" Process="@(server.Online ? Math.Round(((decimal)server.swap_used/server.swap_total)*100) : 0)">
-                                <div class="progress">@(server.Online ? $"{BytesToSize(server.swap_used * 1024)} / {BytesToSize(server.swap_total * 1024)}" : "-")</div>
+                            <Progress Class="content" Process="@(server.Online ? server.SwapUsage * 100 : 0)">
+                                <div class="progress">@(server.Online && server.swap_total > 0 ? $"{BytesToSize(server.swap_used * 1024)} / {BytesToSize(server.swap_total * 1024)}" : "-")</div>
                             </Progress>
                         </div>
                         <div class="row">
                             <div class="title">硬盘：</div>
-                            <Progress Class="content" Process="@(server.Online ? Math.Round(((decimal)server.hdd_used/server.hdd_total)*100) : 0)">
+                            <Progress Class="content" Process="@(server.Online ? server.HDDUsage * 100 : 0)">
                                 <div class="progress">@(server.Online ? $"{BytesToSize(server.hdd_used * 1024 * 1024)} / {BytesToSize(server.hdd_total * 1024 * 1024)}" : "-")</div>
                             </Progress>
                         </div>
@@ -78,6 +78,7 @@
         base.OnInitialized();
         _Timer = new System.Timers.Timer(2000);
         _Timer.Elapsed += OnTimerElapsed;
+        Task.Factory.StartNew(() => OnTimerElapsed(null, null));
     }
 
     protected override void OnAfterRender(bool firstRender)

@@ -102,5 +102,18 @@ namespace JGLB.Website.Data
         public bool Online => online4 || online6;
 
         public bool IsWin => host.StartsWith("win");
+
+        /// <summary>
+        /// 内存使用率 0.00
+        /// </summary>
+        public decimal MemoryUsage => memory_total > 0 ? Math.Round((decimal)memory_used / memory_total,2) : 0;
+        /// <summary>
+        /// Swap使用率 0.00
+        /// </summary>
+        public decimal SwapUsage => swap_total > 0 ? Math.Round((decimal)swap_used / swap_total, 2) : 0;
+        /// <summary>
+        /// 硬盘使用率 0.00
+        /// </summary>
+        public decimal HDDUsage => hdd_total > 0 ? Math.Round((decimal)hdd_used / hdd_total, 2) : 0;
     }
 }
