@@ -8,13 +8,16 @@
 
   <ItemGroup>
     <ProjectReference Include="..\JGLB.Common\JGLB.Common.csproj" />
-    <ProjectReference Include="..\JGLB.MDUI\JGLB.MDUI.csproj" />
     <ProjectReference Include="..\JGLB.Website.Data\JGLB.Website.Data.csproj" />
     <ProjectReference Include="..\JGLB.Website.Service\JGLB.Website.Service.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="wwwroot\css\myicon\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="JGLB.MDUI" Version="0.0.1" />
   </ItemGroup>
 
 </Project>
