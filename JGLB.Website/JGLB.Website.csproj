@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="JGLB.MDUI" Version="0.0.1" />
+    <PackageReference Include="JGLB.MDUI" Version="0.0.3-alpha6" />
   </ItemGroup>
 
 </Project>

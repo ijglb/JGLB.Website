@@ -1,11 +1,14 @@
 ﻿@using JGLB.Website.Data
 @inject IConfiguration Configuration
+@inject NavigationManager NavigationManager
 
 <Appbar Fixed ScrollHide>
     <Tab Id="app-tab" BGColor="Color.Theme" Class="@Ripple.Color(Color.White)" Centered>
         @foreach (var nav in _Navs)
         {
-            <TabItem Label="@nav?.Name" Icon="@nav?.Icon" RouterLink="@nav?.RouteUrl"></TabItem>
+            <NavLink href="@nav?.RouteUrl" class="mdui-ripple" ActiveClass="mdui-tab-active" Match="NavLinkMatch.All">
+                <Icon>@nav?.Icon</Icon><label>@nav?.Name</label>
+            </NavLink>
         }
     </Tab>
 </Appbar>
