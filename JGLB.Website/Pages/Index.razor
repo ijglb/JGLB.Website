@@ -10,7 +10,7 @@
         @foreach (var link in _MyLink)
         {
             <Tooltip Text="@link.Name">
-                <Button Type="ButtonType.Link" To="@link.Url" Target="Target.Blank" Margin="Margin.Is1.FromEnd"><i><svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32"><path d="@link.SvgPath" fill="#ffffff"></path></svg></i></Button>
+                <Button Type="ButtonType.Link" To="@link.Url" Target="Target.Blank" Margin="Margin.Is1.FromTop.Is1.FromEnd"><i><svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32"><path d="@link.SvgPath" fill="#ffffff"></path></svg></i></Button>
             </Tooltip>
         }
     </Paragraph>
