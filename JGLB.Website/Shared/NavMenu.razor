@@ -2,18 +2,42 @@
 @inject IConfiguration Configuration
 @inject NavigationManager NavigationManager
 
-<Appbar Fixed ScrollHide>
-    <Tab Id="app-tab" BGColor="Color.Theme" Class="@Ripple.Color(Color.White)" Centered>
-        @foreach (var nav in _Navs)
-        {
-            <NavLink href="@nav?.RouteUrl" class="mdui-ripple" ActiveClass="mdui-tab-active" Match="NavLinkMatch.All">
-                <Icon>@nav?.Icon</Icon><label>@nav?.Name</label>
-            </NavLink>
-        }
-    </Tab>
-</Appbar>
+<Bar Breakpoint="Breakpoint.Desktop" Visible="false" Background="Background.Primary" ThemeContrast="ThemeContrast.Dark">
+    <BarBrand Style="width:300px;" TextOverflow="TextOverflow.Truncate">
+        @BarBrand
+    </BarBrand>
+    <BarToggler />
+    <BarMenu>
+        <BarStart>
+            @foreach (var nav in _Navs)
+            {
+                <BarItem>
+                    <BarLink To="@nav?.RouteUrl" Class="nav-menu-link">
+                        <BarIcon IconName="@nav?.Icon" VerticalAlignment="VerticalAlignment.TextBottom" />
+                        @nav?.Name
+                    </BarLink>
+                </BarItem>
+            }
+        </BarStart>
+        <BarEnd>
+        </BarEnd>
+    </BarMenu>
+</Bar>
 
 @code {
+    /// <summary>
+    /// 导航标题
+    /// </summary>
+    public RenderFragment BarBrand
+    {
+        get => _BarBrand;
+        set
+        {
+            _BarBrand = value;
+            InvokeAsync(StateHasChanged);
+        }
+    }
+    private RenderFragment _BarBrand = (builder) => builder.AddContent(0, "极光萝卜");
     /// <summary>
     /// 导航，暂时写死
     /// </summary>

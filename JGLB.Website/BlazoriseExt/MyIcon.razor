@@ -1,0 +1,35 @@
+﻿@inherits Blazorise.Icon
+
+<i id="@ElementId" class="@ClassNames" style="@StyleNames" @onclick="@OnClickHandler" @onmouseover="@OnMouseOverHandler" @onmouseout="@OnMouseOutHandler" @attributes="@Attributes">
+    @if (Name is IconName)
+    {
+        @((MarkupString)IconProvider.GetIconName((IconName)Name, GetIconStyle()));
+    }
+    else if (Name is string)
+    {
+        @((MarkupString)IconProvider.GetIconName((string)Name));
+    }
+</i>
+
+@code {
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        if (IconProvider is MyIconProvider)
+        {
+            if (Name != null && Name is string)
+            {
+                string name = (string)Name;
+                if (name.TrimStart().StartsWith(MyIconfont.Perfix))
+                {
+                    ((MyIconProvider)IconProvider).Provider = MyIconProvider.MyIconfont;
+                    Name = ((string)Name).Replace(MyIconfont.Perfix, "");
+                }
+                else
+                {
+                    ((MyIconProvider)IconProvider).Provider = MyIconProvider.Material;
+                }
+            }
+        }
+    }
+}

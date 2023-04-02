@@ -5,66 +5,119 @@
 @implements IDisposable
 @inject ServerStatusService _ServerStatusService;
 
-<PageTitle>@AppEx.Title("服务器状态监控")</PageTitle>
+<MyPageTitle>@AppEx.Title("服务器状态监控")</MyPageTitle>
 
-<div>
-    <GridRow XS="1" SM="2" MD="4">
-        @foreach (var server in _Servers)
-        {
-            <GridCol Class="mdui-m-b-1" @key="server.host">
-                <Card Class="mdui-hoverable">
-                    <CardHeader>
-                        <Icon TextColor="@(server.Online ? Color.Green : Color.Red)" ExIcon="jglb-iconfont" Class="mdui-card-header-avatar mdui-typo-title">@((MarkupString)(server.IsWin ? "&#xe86f;" : "&#xe697;"))</Icon>
-                        <CardHeaderTitle>@server.name</CardHeaderTitle>
-                        <CardHeaderSubtitle>@server.location</CardHeaderSubtitle>
-                    </CardHeader>
-                    <CardContent>
-                        <div class="row">
-                            <div class="title">在线时间：</div><div class="content">@(server.Online ? server.uptime : "-")</div>
-                        </div>
-                        <div class="row">
-                            <div class="title">负载：</div><div class="content">@(server.Online ? server.load_1 : "-")</div>
-                        </div>
-                        <div class="row">
-                            <div class="title">CPU：</div>
-                            <Progress Class="content" Process="@(server.Online ? server.cpu : 0)">
-                                <div class="progress">@(server.Online ? $"{server.cpu} %" : "-")</div>
-                            </Progress>
-                        </div>
-                        <div class="row">
-                            <div class="title">内存：</div>
-                            <Progress Class="content" Process="@(server.Online ? server.MemoryUsage * 100 : 0)">
-                                <div class="progress">@(server.Online ? $"{BytesToSize(server.memory_used * 1024)} / {BytesToSize(server.memory_total * 1024)}" : "-")</div>
-                            </Progress>
-                        </div>
-                        <div class="row">
-                            <div class="title">Swap：</div>
-                            <Progress Class="content" Process="@(server.Online ? server.SwapUsage * 100 : 0)">
-                                <div class="progress">@(server.Online && server.swap_total > 0 ? $"{BytesToSize(server.swap_used * 1024)} / {BytesToSize(server.swap_total * 1024)}" : "-")</div>
-                            </Progress>
-                        </div>
-                        <div class="row">
-                            <div class="title">硬盘：</div>
-                            <Progress Class="content" Process="@(server.Online ? server.HDDUsage * 100 : 0)">
-                                <div class="progress">@(server.Online ? $"{BytesToSize(server.hdd_used * 1024 * 1024)} / {BytesToSize(server.hdd_total * 1024 * 1024)}" : "-")</div>
-                            </Progress>
-                        </div>
-                        <div class="row">
-                            <div class="title">@(server.IsWin ? "流量：" : "月流量：")</div><div class="content">@(server.Online ? $"入：{BytesToSize(server.network_in)} | 出：{BytesToSize(server.network_out)}" : "-")</div>
-                        </div>
-                        <div class="row">
-                            <div class="title">网络：</div><div class="content">@(server.Online ? $"入：{BytesToSize(server.network_rx)} | 出：{BytesToSize(server.network_tx)}" : "-")</div>
-                        </div>
-                    </CardContent>
-                </Card>
-            </GridCol>
-        }
-    </GridRow>
-    <div class="mdui-typo">
-        <hr />
-        <p>@Updated</p>
-    </div>
-</div>
+<Row VerticalGutter="16">
+    @foreach (var server in _Servers)
+    {
+        <Column ColumnSize="ColumnSize.Is3.OnWidescreen.Is4.OnDesktop.Is6.OnTablet.Is12.OnMobile" @key="server.host">
+            <Card>
+                <CardHeader>
+                    <Row>
+                        <Column ColumnSize="ColumnSize.Is2">
+                            <Icon TextColor="@(server.Online ? TextColor.Success : TextColor.Muted)" Name="@(server.IsWin ? MyIconfont.windows : MyIconfont.linux)" IconSize="IconSize.x3" />
+                        </Column>
+                        <Column ColumnSize="ColumnSize.Is10">
+                            <CardTitle TextOverflow="TextOverflow.Truncate">@server.name</CardTitle>
+                            <CardText TextOverflow="TextOverflow.Truncate">@server.location</CardText>
+                        </Column>
+                    </Row>
+                </CardHeader>
+                <ListGroup Flush>
+                <ListGroupItem>
+                    <Row>
+                        <Column ColumnSize="ColumnSize.Is3" TextOverflow="TextOverflow.Truncate">
+                            在线时间
+                        </Column>
+                        <Column ColumnSize="ColumnSize.Is9">
+                            @(server.Online ? server.uptime : "-")
+                            </Column>
+                        </Row>
+                    </ListGroupItem>
+                    <ListGroupItem>
+                        <Row>
+                            <Column ColumnSize="ColumnSize.Is3">
+                                负载
+                            </Column>
+                            <Column ColumnSize="ColumnSize.Is9">
+                                @(server.Online ? server.load_1 : "-")
+                            </Column>
+                        </Row>
+                    </ListGroupItem>
+                    <ListGroupItem>
+                        <Row>
+                            <Column ColumnSize="ColumnSize.Is3">
+                                CPU
+                            </Column>
+                            <Column ColumnSize="ColumnSize.Is9">
+                                <Progress Value="@(server.Online ? (int)server.cpu : 0)" Color="@(server.cpu > 74 ? server.cpu > 98 ? Color.Danger : Color.Warning : Color.Success)">
+                                    @(server.Online ? $"{server.cpu} %" : "-")
+                                </Progress>
+                            </Column>
+                        </Row>
+                    </ListGroupItem>
+                    <ListGroupItem>
+                        <Row>
+                            <Column ColumnSize="ColumnSize.Is3">
+                                内存
+                            </Column>
+                            <Column ColumnSize="ColumnSize.Is9">
+                                <Progress Value="@(server.Online ? (int)(server.MemoryUsage * 100) : 0)" Color="@(server.MemoryUsage > 0.74m ? server.MemoryUsage > 0.89m ? Color.Danger : Color.Warning : Color.Success)">
+                                    @(server.Online ? $"{BytesToSize(server.memory_used * 1024)} / {BytesToSize(server.memory_total * 1024)}" : "-")
+                                </Progress>
+                            </Column>
+                        </Row>
+                    </ListGroupItem>
+                    <ListGroupItem>
+                        <Row>
+                            <Column ColumnSize="ColumnSize.Is3">
+                                Swap
+                            </Column>
+                            <Column ColumnSize="ColumnSize.Is9">
+                                <Progress Value="@(server.Online ? (int)(server.SwapUsage * 100) : 0)" Color="@(server.SwapUsage > 0.74m ? server.SwapUsage > 0.89m ? Color.Danger : Color.Warning : Color.Success)">
+                                    @(server.Online && server.swap_total > 0 ? $"{BytesToSize(server.swap_used * 1024)} / {BytesToSize(server.swap_total * 1024)}" : "-")
+                                </Progress>
+                            </Column>
+                        </Row>
+                    </ListGroupItem>
+                    <ListGroupItem>
+                        <Row>
+                            <Column ColumnSize="ColumnSize.Is3">
+                                硬盘
+                            </Column>
+                            <Column ColumnSize="ColumnSize.Is9">
+                                <Progress Value="@(server.Online ? (int)(server.HDDUsage * 100) : 0)" Color="@(server.HDDUsage > 0.74m ? server.HDDUsage > 0.89m ? Color.Danger : Color.Warning : Color.Success)">
+                                    @(server.Online ? $"{BytesToSize(server.hdd_used * 1024 * 1024)} / {BytesToSize(server.hdd_total * 1024 * 1024)}" : "-")
+                                </Progress>
+                            </Column>
+                        </Row>
+                    </ListGroupItem>
+                    <ListGroupItem>
+                        <Row>
+                            <Column ColumnSize="ColumnSize.Is3">
+                                @(server.IsWin ? "流量" : "月流量")
+                            </Column>
+                            <Column ColumnSize="ColumnSize.Is9">
+                                @(server.Online ? $"入：{BytesToSize(server.network_in)} | 出：{BytesToSize(server.network_out)}" : "-")
+                            </Column>
+                        </Row>
+                    </ListGroupItem>
+                    <ListGroupItem>
+                        <Row>
+                            <Column ColumnSize="ColumnSize.Is3">
+                                网络
+                            </Column>
+                            <Column ColumnSize="ColumnSize.Is9">
+                                @(server.Online ? $"入：{BytesToSize(server.network_rx)} | 出：{BytesToSize(server.network_tx)}" : "-")
+                            </Column>
+                        </Row>
+                    </ListGroupItem>
+                </ListGroup>
+            </Card>
+        </Column>
+    }
+</Row>
+<Divider DividerType="DividerType.TextContent" Text="@Updated" />
 
 @code {
     private ServerStats[] _Servers = Array.Empty<ServerStats>();

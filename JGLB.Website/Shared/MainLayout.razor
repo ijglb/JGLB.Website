@@ -5,23 +5,33 @@
 
 <PageTitle>极光萝卜</PageTitle>
 
-<Body PrimaryColor="Color.Teal" AccentColor="Color.DeepOrange" Style="height: calc(100vh - 72px);">
-    <NavMenu />
-    <Container BGColor="Color.Theme" BGDegree="Degree.The100" Style="height: 100%;" Fluid>
-        <Card BGColor="Color.Theme" BGDegree="Degree.The200" Style="height: calc(100% - 27px - 8px);overflow: auto;">
-            <CardContent>
-                @Body
-            </CardContent>
-        </Card>
-        <div id="footer" class="mdui-m-t-1 mdui-text-center mdui-typo">
-            &copy; 2016 - @_Year 极光萝卜 | <a href="http://beian.miit.gov.cn" target="_blank">闽ICP备16005039号-1</a>
-        </div>
-    </Container>
-</Body>
+<Layout Background="Background.Body" Overflow="Overflow.Auto">
+    <LayoutHeader Fixed>
+        <NavMenu @ref="_NavMenu" />
+    </LayoutHeader>
+    <LayoutContent Margin="Margin.Is5.FromTop">
+        <Container Fluid Margin="Margin.Is3.FromTop">
+            <Card Background="Background.Secondary" Style="min-height: calc(100vh - 56px - 21px - 20px);">
+                <CardBody>
+                    <CascadingValue Value="_NavMenu" IsFixed>
+                        @Body
+                    </CascadingValue>
+                </CardBody>
+            </Card>
+        </Container>
+    </LayoutContent>
+    <LayoutFooter>
+        <Div TextAlignment="TextAlignment.Center">
+            <Text>&copy; 2016 - @_Year 极光萝卜 | </Text><Link TextColor="TextColor.Primary" To="http://beian.miit.gov.cn" Target="Target.Blank">闽ICP备16005039号-1</Link>
+        </Div>
+    </LayoutFooter>
+</Layout>
 
 @code
-{
+        {
     private string _Year = DateTime.Now.Year.ToString();
+
+    private NavMenu? _NavMenu;
     //private string _CardContentHeight = "";
     //private string _CardStyle => $"{_CardContentHeight}";
     //private Card? _Card;

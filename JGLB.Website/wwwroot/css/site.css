@@ -1,0 +1,14 @@
+.nav-menu-link {
+    font-size: 1.2rem!important;
+}
+
+/*helper*/
+.mdui-center {
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+}
+.mdui-valign {
+    display: flex;
+    align-items: center;
+}

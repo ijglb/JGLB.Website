@@ -2,26 +2,30 @@
 @using JGLB.Common;
 @inject IConfiguration Configuration
 
-<PageTitle>@AppEx.Title("友情链接")</PageTitle>
+<MyPageTitle>@AppEx.Title("友情链接")</MyPageTitle>
 
-<div>
-    <GridRow XS="1" SM="2" MD="4" Class="links">
-        @foreach (var link in _MyLink)
-        {
-            <GridCol Class="mdui-m-b-1">
-                <a href="@link.Url" title="@link.Desc" target="_blank">
-                    <Card Class="mdui-hoverable">
-                        <CardHeader>
-                            <CardHeaderAvatar Src="@link.Avatar"></CardHeaderAvatar>
-                            <CardHeaderTitle>@link.Name</CardHeaderTitle>
-                            <CardHeaderSubtitle>@link.Desc</CardHeaderSubtitle>
-                        </CardHeader>
-                    </Card>
-                </a>
-            </GridCol>
-        }
-    </GridRow>
-</div>
+<Row VerticalGutter="16">
+    @foreach (var link in _MyLink)
+    {
+        <Column ColumnSize="ColumnSize.Is3.OnWidescreen.Is4.OnDesktop.Is6.OnTablet.Is12.OnMobile">
+            <Blazorise.Link To="@link.Url" Title="@link.Desc" Target="Target.Blank">
+                <Card>
+                    <Row>
+                        <Column ColumnSize="ColumnSize.Is2" Class="mdui-valign">
+                            <img class="links-avatar" src="@link.Avatar" />
+                        </Column>
+                        <Column ColumnSize="ColumnSize.Is10">
+                            <CardBody>
+                                <CardTitle TextOverflow="TextOverflow.Truncate">@link.Name</CardTitle>
+                                <CardText TextOverflow="TextOverflow.Truncate">@link.Desc&nbsp;</CardText>
+                            </CardBody>
+                        </Column>
+                    </Row>
+                </Card>
+            </Blazorise.Link>
+        </Column>
+    }
+</Row>
 
 @code {
     private List<MyLink> _MyLink;

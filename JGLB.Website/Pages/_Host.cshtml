@@ -1,5 +1,4 @@
 ﻿@page "/"
-@using JGLB.MDUI;
 @using Microsoft.AspNetCore.Components.Web
 @namespace JGLB.Website.Pages
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
@@ -10,11 +9,18 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <base href="~/" />
-    @*<link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />*@
-    @*<link href="css/site.css" rel="stylesheet" />*@
-    <link href="_content/JGLB.MDUI/css/mdui.min.css" rel="stylesheet" />
+    <!-- Material CSS -->
+    <link href="material/css/material.min.css" rel="stylesheet">
+    <!-- Add Material font (Roboto) and Material icon as needed -->
+    <link href="material/css/google-roboto.css" rel="stylesheet">
+    <link href="material/css/google-materialicons.css" rel="stylesheet">
+    <!-- Blazorise CSS -->
+    <link href="_content/Blazorise/blazorise.css" rel="stylesheet" />
+    <link href="_content/Blazorise.Material/blazorise.material.css" rel="stylesheet" />
+    <link href="_content/Blazorise.Icons.Material/blazorise.icons.material.css" rel="stylesheet" />
+    <link href="css/site.css" rel="stylesheet" />
     <link href="JGLB.Website.styles.css" rel="stylesheet" />
-    <link href="/css//myicon/iconfont.css" rel="stylesheet" />
+    <link href="/css/myicon/iconfont.css" rel="stylesheet" />
     <link rel="icon shortcut" type="image/ico" href="/image/avatar_128.png">
     <link rel="icon" sizes="128x128" href="/image/avatar_128.png">
     <link rel="apple-touch-icon" href="/image/avatar_128.png">
@@ -33,10 +39,10 @@
         <a href="" class="reload">Reload</a>
         <a class="dismiss">🗙</a>
     </div>*@
+    <!-- Mandatory JavaScript -->
+    <script src="material/js/material.min.js"></script>
+    <script src="_content/Blazorise.Material/blazorise.material.js"></script>
     <script src="_framework/blazor.server.js"></script>
-    <script src="_content/JGLB.MDUI/js/mdui.min.js"></script>
-    <script src="_content/JGLB.MDUI/js/mdui.blazor.js"></script>
-    @*<script src="/js/myicon/iconfont.js"></script>*@
     <script src="/js/app.js"></script>
     <script>
         var _hmt = _hmt || [];

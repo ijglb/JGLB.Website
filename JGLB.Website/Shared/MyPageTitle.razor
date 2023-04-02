@@ -1,0 +1,16 @@
+﻿<PageTitle>@ChildContent</PageTitle>
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+    [CascadingParameter]
+    public NavMenu? NavMenu { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        if (NavMenu != null)
+        {
+            NavMenu.BarBrand = ChildContent;
+        }
+    }
+}

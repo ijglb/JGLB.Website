@@ -17,7 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="JGLB.MDUI" Version="0.0.3-alpha6" />
+    <PackageReference Include="Blazorise.Icons.Material" Version="1.2.2" />
+    <PackageReference Include="Blazorise.Material" Version="1.2.2" />
   </ItemGroup>
 
 </Project>

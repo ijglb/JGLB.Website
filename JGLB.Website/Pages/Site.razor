@@ -1,24 +1,26 @@
 ﻿@page "/site"
 @inject IConfiguration Configuration
 
-<PageTitle>@AppEx.Title("我的站点")</PageTitle>
+<MyPageTitle>@AppEx.Title("我的站点")</MyPageTitle>
 
-    <GridRow XS="1" SM="2" MD="4" Class="mdui-typo">
-        @foreach (var mySite in _MySite)
-        {
-            <GridCol Class="mdui-m-b-1">
-                <a href="@mySite.Url" title="@mySite.Desc" target="_blank" class="fix-a">
-                    <Card Class="mdui-hoverable">
-                        <CardHeader>
-                            <Icon Class="mdui-card-header-avatar mdui-typo-title" TextColor="Color.Green">cloud</Icon>
-                            <CardHeaderTitle Class="mdui-text-truncate">@mySite.Name</CardHeaderTitle>
-                        </CardHeader>
-                        <CardContent Class="mdui-text-truncate">@mySite.Desc</CardContent>
-                    </Card>
-                </a>
-            </GridCol>
-        }
-    </GridRow>
+<Row VerticalGutter="16">
+    @foreach (var mySite in _MySite)
+    {
+        <Column ColumnSize="ColumnSize.Is3.OnWidescreen.Is4.OnDesktop.Is6.OnTablet.Is12.OnMobile">
+            <Blazorise.Link To="@mySite.Url" Title="@mySite.Desc" Target="Target.Blank">
+                <Card>
+                    <CardBody>
+                        <CardTitle TextOverflow="TextOverflow.Truncate">
+                            <Icon Name="IconName.Cloud"></Icon>
+                            &nbsp;@mySite.Name
+                        </CardTitle>
+                        <CardText TextOverflow="TextOverflow.Truncate">@mySite.Desc</CardText>
+                    </CardBody>
+                </Card>
+            </Blazorise.Link>
+        </Column>
+    }
+</Row>
 
 @code {
     private List<MySite> _MySite;

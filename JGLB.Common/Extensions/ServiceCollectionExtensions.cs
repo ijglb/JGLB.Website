@@ -1,11 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace JGLB.Common
 {
@@ -15,10 +11,19 @@ namespace JGLB.Common
         /// Service属性自动注入
         /// </summary>
         /// <param name="services"></param>
+        /// <param name="assemblys"></param>
         /// <returns></returns>
-        public static IServiceCollection AddServiceAttribute(this IServiceCollection services)
+        public static IServiceCollection AddServiceAttribute(this IServiceCollection services, params Assembly[] assemblys)
         {
-            var allAssembly = GetAllAssembly();
+            var allAssembly = new List<Assembly>();
+            if (assemblys == null)
+            {
+                allAssembly = GetAllAssembly();
+            }
+            else
+            {
+                allAssembly.AddRange(assemblys);
+            }
 
             var types = allAssembly.SelectMany(t => t.GetTypes()).Where(t => t.IsClass && !t.IsAbstract && t.IsDefined(typeof(ServiceAttribute), false)).Select(t => new { Type = t, Lifetime = t.GetCustomAttribute<ServiceAttribute>()?.Lifetime }).ToList();
 
@@ -48,7 +53,15 @@ namespace JGLB.Common
             return services;
         }
 
-        private static List<Assembly> GetAllAssembly()
+        /// <summary>
+        /// Service属性自动注入
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="regexStrs"></param>
+        /// <returns></returns>
+        public static IServiceCollection AddServiceAttribute(this IServiceCollection services, params string[] regexStrs) => services.AddServiceAttribute(GetAllAssembly(regexStrs).ToArray());
+
+        private static List<Assembly> GetAllAssembly(params string[] regexStrs)
         {
 
             var allAssemblies = AppDomain.CurrentDomain.GetAssemblies().ToList();
@@ -79,6 +92,10 @@ namespace JGLB.Common
                         allAssemblies.Add(assembly);
                     }
                 }
+            }
+            if (regexStrs != null)
+            {
+                allAssemblies.RemoveAll(x => !regexStrs.Any(s => Regex.IsMatch(x.FullName ?? "", s)));
             }
             return allAssemblies;
         }

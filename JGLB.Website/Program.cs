@@ -1,6 +1,7 @@
+using Blazorise;
+using Blazorise.Material;
 using JGLB.Common;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
+using JGLB.Website;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,8 +10,13 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 //http client
 builder.Services.AddHttpClient();
+//Blazorise Material
+builder.Services
+    .AddBlazorise()
+    .AddMaterialProviders()
+    .AddMyIcons();
 //Service×¢Èë
-builder.Services.AddServiceAttribute();
+builder.Services.AddServiceAttribute("^JGLB");
 
 var app = builder.Build();
 
